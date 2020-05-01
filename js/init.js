@@ -6,7 +6,7 @@ const init = () => {
         const profile = new Profile();
         profile
         .getProfile('khalender')
-        .then((a)=> profile.handleHomeClick().apply(profile)); //this is also binding but occurs one time. 
+        .then((a)=> profile.handleHomeClick().call(profile)); //this is also binding but occurs one time. 
         
         
 

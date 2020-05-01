@@ -37,9 +37,7 @@ class Profile {
 
 
     renderPicture() {
-        const pictureContainer = document.getElementById('picture');
-
-        pictureContainer.id = this.id;
+        const pictureContainer = document.getElementById('pic');
 
         const name = document.createElement('h3');
         const image = document.createElement('img');
@@ -81,6 +79,7 @@ class Profile {
             .then((data) => {
                 return data.map(data => ({ name: data.name, url: data.html_url, description: data.description }))
             })
+            .then(x => new Promise(resolve => setTimeout(() => resolve(x), 1000))) /// intentionally delay 2 sec
             .then((repos) => {
                 const container = document.createElement('div');
                 const listEl = document.createElement('ul');
@@ -91,6 +90,9 @@ class Profile {
                 repos.forEach(repo => {
                     console.log("each repo " + JSON.stringify(repo));
                     const rowEl = document.createElement('li');
+                    const icon = document.createElement('i');
+                    icon.setAttribute('class', "fa fa-github fa-3x");
+                    rowEl.appendChild(icon);
                     let repoProps = Object.keys(repo);
                     repoProps.forEach(key => {
                         const columnEl = document.createElement('div');
@@ -105,6 +107,18 @@ class Profile {
                 return container;
             });
     }
+    renderLoading() {
+        const container = document.createElement('div');
+        container.classList.add("loading");
+        const icon = document.createElement('i');
+        icon.setAttribute('class', "fa fa-spinner fa-pulse fa-3x fa-fw");
+        container.appendChild(icon);
+
+    return container;
+
+
+
+    }
 
     handleHomeClick() {
         this.renderRouter(this.renderHome());
@@ -115,10 +129,12 @@ class Profile {
     }
 
     handleGitHubRepoClick() {
-        this.renderRepos().then((container)=> 
-        this.renderRouter(container)
-        );
-        
+        this.renderRouter(this.renderLoading());
+        this.renderRepos().then((container) =>
+            this.renderRouter(container)
+        )
+
+
     }
     handleWorksClick() {
         //could not be completed
